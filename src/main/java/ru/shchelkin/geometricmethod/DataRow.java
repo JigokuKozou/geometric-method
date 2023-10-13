@@ -1,4 +1,4 @@
-package ru.shchelkin.geometricmethod.model;
+package ru.shchelkin.geometricmethod;
 
 public class DataRow {
     private final String fileName;

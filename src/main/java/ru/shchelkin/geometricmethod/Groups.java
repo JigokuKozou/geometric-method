@@ -1,20 +1,21 @@
-package ru.shchelkin.geometricmethod.model;
-
-import javafx.scene.Group;
+package ru.shchelkin.geometricmethod;
 
 public enum Groups {
-    ALZ("alz", "alz_c1_new.mat"),
-    CONTROLS("controls", "controls_c1_new.mat"),
-    DEPRESSION("dep", "dep_c1_new.mat"),
-    MCI("mci", "mci_c1_new.mat"),
-    SCHIZ("schiz", "schiz_c1_new.mat");
+    ALZ("alz", "alz_c1_new.mat", "red"),
+    CONTROLS("controls", "controls_c1_new.mat", "green"),
+    DEPRESSION("dep", "dep_c1_new.mat", "blue"),
+    MCI("mci", "mci_c1_new.mat", "black"),
+    SCHIZ("schiz", "schiz_c1_new.mat", "pink");
 
     private final String name;
     private final String fileName;
 
-    Groups(String name, String fileName) {
+    private final String color;
+
+    Groups(String name, String fileName, String color) {
         this.name = name;
         this.fileName = fileName;
+        this.color = color;
     }
 
     public String getName() {
@@ -23,6 +24,10 @@ public enum Groups {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public static Groups getGroupByFileName(String fileName)  {

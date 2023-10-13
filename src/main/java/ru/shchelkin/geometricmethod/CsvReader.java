@@ -1,6 +1,6 @@
-package ru.shchelkin.geometricmethod.util;
+package ru.shchelkin.geometricmethod;
 
-import ru.shchelkin.geometricmethod.model.DataRow;
+import ru.shchelkin.geometricmethod.DataRow;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -53,7 +53,7 @@ public class CsvReader {
                         values[20].length(), // 16
                         values[21].length(), // 17
                         values[22].length(), // 18
-                        values[23].length() // 19
+                        values[23].length()  // 19
                 );
                 dataRows.add(dataRow);
             }

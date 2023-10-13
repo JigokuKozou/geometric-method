@@ -1,21 +1,19 @@
-package ru.shchelkin.geometricmethod.model;
+package ru.shchelkin.geometricmethod;
 
-import javafx.geometry.Point2D;
-
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class EpsilonCylinder {
-    private final Point2D first;
+    private final Point first;
 
-    private final Point2D second;
+    private final Point second;
 
     private final double epsilon;
 
-    private final Set<Point2D> neighborhood;
+    private final List<Point> neighborhood;
 
-    public EpsilonCylinder(Point2D first, Point2D second, double epsilon, Set<Point2D> neighborhood) {
+    public EpsilonCylinder(Point first, Point second, double epsilon, List<Point> neighborhood) {
         this.first = first;
         this.second = second;
         this.epsilon = epsilon;
@@ -26,7 +24,7 @@ public class EpsilonCylinder {
         return 2 + neighborhood.size();
     }
 
-    public boolean contains(Point2D point) {
+    public boolean contains(Point point) {
         return first.equals(point) || second.equals(point) || neighborhood.contains(point);
     }
 
@@ -39,29 +37,26 @@ public class EpsilonCylinder {
         return true;
     }
 
-    public Point2D getFirst() {
+    public Point getFirst() {
         return first;
     }
 
-    public Point2D getSecond() {
+    public Point getSecond() {
         return second;
     }
 
-    public Set<Point2D> getNeighborhood() {
-        return neighborhood;
-    }
-
-    public Set<Point2D> getAllPoints() {
-        Set<Point2D> allPoints = new HashSet<>(neighborhood);
+    public List<Point> getAllPoints() {
+        ArrayList<Point> allPoints = new ArrayList<>(neighborhood);
         allPoints.add(first);
         allPoints.add(second);
 
         return allPoints;
     }
 
-    public double calculateNormalizedAngle(Point2D first, Point2D second) {
-        double angleInRadians = Math.atan2(second.getY() - first.getY(), second.getX() - first.getX()) -
-                Math.atan2(this.second.getY() - this.first.getY(), this.second.getX() - this.first.getX());
+    public double calculateNormalizedAngle(Point lineFirst, Point lineSecond) {
+        double lineAngle = Math.atan2(lineSecond.getY() - lineFirst.getY(), lineSecond.getX() - lineFirst.getX());
+        double cylinderAngle = Math.atan2(second.getY() - first.getY(), second.getX() - first.getX());
+        double angleInRadians = lineAngle - cylinderAngle;
 
         if (angleInRadians < 0) {
             angleInRadians += 2 * Math.PI;
@@ -70,7 +65,7 @@ public class EpsilonCylinder {
         return angleInRadians;
     }
 
-    public static double distance(Point2D point, Point2D first, Point2D second) {
+    public static double distance(Point point, Point first, Point second) {
         double length = first.distance(second);
         if (length == 0) {
             return point.distance(first);
@@ -83,7 +78,7 @@ public class EpsilonCylinder {
         if (t > 1) {
             return point.distance(second);
         }
-        Point2D projection = new Point2D(first.getX() + t * (second.getX() - first.getX()),
+        Point projection = new Point(first.getX() + t * (second.getX() - first.getX()),
                 first.getY() + t * (second.getY() - first.getY()));
         return point.distance(projection);
     }
@@ -101,8 +96,8 @@ public class EpsilonCylinder {
         EpsilonCylinder that = (EpsilonCylinder) o;
 
         if (Double.compare(that.epsilon, epsilon) != 0) return false;
-        if ((Objects.equals(first, that.first) && Objects.equals(second, that.second)) ||
-                (Objects.equals(first, that.second) && Objects.equals(second, that.first))) {
+        if (Objects.equals(first, that.first) && Objects.equals(second, that.second) ||
+        Objects.equals(second, that.first) && Objects.equals(first, that.second)) {
             return Objects.equals(neighborhood, that.neighborhood);
         }
         return false;
@@ -112,7 +107,8 @@ public class EpsilonCylinder {
     public int hashCode() {
         int result;
         long temp;
-        result = (first != null ? first.hashCode() : 0) + (second != null ? second.hashCode() : 0);
+        result = first != null ? first.hashCode() : 0;
+        result = 31 * result + (second != null ? second.hashCode() : 0);
         temp = Double.doubleToLongBits(epsilon);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (neighborhood != null ? neighborhood.hashCode() : 0);

@@ -1,7 +1,7 @@
-package ru.shchelkin.geometricmethod.util;
+package ru.shchelkin.geometricmethod;
 
-import javafx.geometry.Point2D;
-import ru.shchelkin.geometricmethod.model.EpsilonCylinder;
+import ru.shchelkin.geometricmethod.EpsilonCylinder;
+import ru.shchelkin.geometricmethod.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,10 +10,10 @@ import java.util.Set;
 
 public class EpsilonCylinderCreator {
     private final double epsilon;
-    private final Set<Point2D> points;
+    private final List<Point> points;
     private final Set<EpsilonCylinder> cylinders;
 
-    public EpsilonCylinderCreator(double epsilon, Set<Point2D> points) {
+    public EpsilonCylinderCreator(double epsilon, List<Point> points) {
         this.epsilon = epsilon;
         this.points = points;
         this.cylinders = new HashSet<>();
@@ -21,13 +21,15 @@ public class EpsilonCylinderCreator {
     }
 
     private void createCylinders() {
-        Point2D[] arrayPoints = points.toArray(new Point2D[0]);
-        for (int i = 0; i < arrayPoints.length - 1; i++) {
-            Point2D first = arrayPoints[i];
-            for (int j = i + 1; j < arrayPoints.length; j++) {
-                Point2D second = arrayPoints[j];
-                Set<Point2D> neighborhood = new HashSet<>();
-                for (Point2D point : arrayPoints) {
+        Set<Point> uniquePoints = Set.copyOf(points);
+
+        for (Point first : points) {
+            for (Point second : points) {
+                if (second.equals(first))
+                    continue;
+
+                List<Point> neighborhood = new ArrayList<>();
+                for (Point point : points) {
                     if (point.equals(first) || point.equals(second))
                         continue;
 
